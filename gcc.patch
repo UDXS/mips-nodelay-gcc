@@ -1,0 +1,53 @@
+diff --git a/gcc/config/mips/mips.md b/gcc/config/mips/mips.md
+index b0fb5850a..bbaca43fc 100644
+--- a/gcc/config/mips/mips.md
++++ b/gcc/config/mips/mips.md
+@@ -1103,48 +1103,6 @@
+ ;;
+ ;; .........................
+ 
+-(define_delay (and (eq_attr "type" "branch")
+-		   (not (match_test "TARGET_MIPS16"))
+-		   (eq_attr "branch_likely" "yes"))
+-  [(eq_attr "can_delay" "yes")
+-   (nil)
+-   (eq_attr "can_delay" "yes")])
+-
+-;; Branches that have delay slots and don't have likely variants do
+-;; not annul on false.
+-(define_delay (and (eq_attr "type" "branch,simd_branch")
+-		   (not (match_test "TARGET_MIPS16"))
+-		   (ior (match_test "TARGET_CB_NEVER")
+-			(and (eq_attr "compact_form" "maybe")
+-			     (not (match_test "TARGET_CB_ALWAYS")))
+-			(eq_attr "compact_form" "never"))
+-		   (eq_attr "branch_likely" "no"))
+-  [(eq_attr "can_delay" "yes")
+-   (nil)
+-   (nil)])
+-
+-(define_delay (and (eq_attr "type" "jump")
+-		   (ior (match_test "TARGET_CB_NEVER")
+-			(and (eq_attr "compact_form" "maybe")
+-			     (not (match_test "TARGET_CB_ALWAYS")))
+-			(eq_attr "compact_form" "never")))
+-  [(eq_attr "can_delay" "yes")
+-   (nil)
+-   (nil)])
+-
+-;; Call type instructions should never have a compact form as the
+-;; type is only used for MIPS16 patterns.  For safety put the compact
+-;; branch detection condition in anyway.
+-(define_delay (and (eq_attr "type" "call")
+-		   (eq_attr "jal_macro" "no")
+-		   (ior (match_test "TARGET_CB_NEVER")
+-			(and (eq_attr "compact_form" "maybe")
+-			     (not (match_test "TARGET_CB_ALWAYS")))
+-			(eq_attr "compact_form" "never")))
+-  [(eq_attr "can_delay" "yes")
+-   (nil)
+-   (nil)])
+-
+ ;; Pipeline descriptions.
+ ;;
+ ;; generic.md provides a fallback for processors without a specific
